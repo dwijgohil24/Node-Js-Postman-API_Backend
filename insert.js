@@ -2,8 +2,8 @@ const dbConnect = require('./mongodb');
 
 const insert = async()=>{
 
-    let data = await dbConnect();
-    data = await data.find().toArray();
+    let db = await dbConnect();
+    data = await db.find().toArray();
     let new_data = [
         {name : "Xperia",
         brand : "sony",
@@ -19,8 +19,15 @@ const insert = async()=>{
     //Console.log("enter the data in json format that your want to insert");
     //take data from the user and add that into our database.
 
-    data.insertMany(new_data);
-    Console.log("data inserted successfuly !");
+    const op_done = await db.insertMany(new_data);
+
+    if((await op_done).acknowledged){
+        console.log("data inserted successfuly !");
+    }
+    else{
+        console.log("Error : Data not inserted !!");
+    }
+    //Console.log("data inserted successfuly !");
 }
 
-insert();
+module.exports = insert;
